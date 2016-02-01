@@ -13,13 +13,13 @@ const OneTwoThree = { first: 1, rest: { first: 2, rest: { first: 3, rest: EMPTY 
 
 OneTwoThree.first
   //=> 1
-  
+
 OneTwoThree.rest.first
   //=> 2
-  
+
 OneTwoThree.rest.rest.first
   //=> 3
-  
+
 const length = (node, delayed = 0) =>
   node === EMPTY
     ? delayed
@@ -33,7 +33,7 @@ A very long time ago, mathematicians like Alonzo Church, Moses Schönfinkel, Ala
 
 They established that arbitrary computations could be represented a small set of axiomatic components. For example, we don't need arrays to represent lists, or even POJOs to represent nodes in a linked list. We can model lists just using functions.
 
-> [To Mock a Mockingbird](http://www.amazon.com/gp/product/0192801422/ref=as_li_ss_tl?ie=UTF8&tag=raganwald001-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0192801422) established the metaphor of songbirds for the combinators, and ever since then logicians have called the K combinator a "kestrel," the B combinator a "bluebird," and so forth. 
+> [To Mock a Mockingbird](http://www.amazon.com/gp/product/0192801422/ref=as_li_ss_tl?ie=UTF8&tag=raganwald001-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0192801422) established the metaphor of songbirds for the combinators, and ever since then logicians have called the K combinator a "kestrel," the B combinator a "bluebird," and so forth.
 
 > The [oscin.es] library contains code for all of the standard combinators and for experimenting using the standard notation.
 
@@ -76,7 +76,7 @@ Like so:
 ~~~~~~~~
 K(6)(7)
   //=> 6
-  
+
 K(12)(24)
   //=> 12
 ~~~~~~~~
@@ -91,7 +91,7 @@ Therefore, `K(I)(x)(y) => y`:
 ~~~~~~~~
 K(I)(6)(7)
   //=> 7
-  
+
 K(I)(12)(24)
   //=> 24
 ~~~~~~~~
@@ -102,7 +102,7 @@ Aha! Given two values, `K(I)` always returns the *second* value.
 ~~~~~~~~
 K("primus")("secundus")
   //=> "primus"
-  
+
 K(I)("primus")("secundus")
   //=> "secundus"
 ~~~~~~~~
@@ -113,10 +113,10 @@ If we are not feeling particularly academic, we can name our functions:
 ~~~~~~~~
 const first = K,
       second = K(I);
-      
+
 first("primus")("secundus")
   //=> "primus"
-  
+
 second("primus")("secundus")
   //=> "secundus"
 ~~~~~~~~
@@ -131,12 +131,12 @@ Our `first` and `second` functions are a little different than what most people 
 ~~~~~~~~
 const first = ([first, second]) => first,
       second = ([first, second]) => second;
-      
+
 const latin = ["primus", "secundus"];
-      
+
 first(latin)
   //=> "primus"
-  
+
 second(latin)
   //=> "secundus"
 ~~~~~~~~
@@ -147,12 +147,12 @@ Or if we were using a POJO, we'd write them like this:
 ~~~~~~~~
 const first = ({first, second}) => first,
       second = ({first, second}) => second;
-      
+
 const latin = {first: "primus", second: "secundus"};
-      
+
 first(latin)
   //=> "primus"
-  
+
 second(latin)
   //=> "secundus"
 ~~~~~~~~
@@ -167,12 +167,12 @@ Here's the first cut:
 ~~~~~~~~
 const first = K,
       second = K(I);
-      
+
 const latin = (selector) => selector("primus")("secundus");
 
 latin(first)
   //=> "primus"
-  
+
 latin(second)
   //=> "secundus"
 ~~~~~~~~
@@ -211,7 +211,7 @@ const latin = pair("primus")("secundus");
 
 latin(first)
   //=> "primus"
-  
+
 latin(second)
   //=> "secundus"
 ~~~~~~~~
@@ -228,7 +228,7 @@ const latin = pair("primus")("secundus");
 
 latin(first)
   //=> "primus"
-  
+
 latin(second)
   //=> "secundus"
 ~~~~~~~~
@@ -247,7 +247,7 @@ const first = ({first, rest}) => first,
       rest  = ({first, rest}) => rest,
       pair = (first, rest) => ({first, rest}),
       EMPTY = ({});
-      
+
 const l123 = pair(1, pair(2, pair(3, EMPTY)));
 
 first(l123)
@@ -281,7 +281,7 @@ const mapWith = (fn, aPair, delayed = EMPTY) =>
   aPair === EMPTY
     ? reverse(delayed)
     : mapWith(fn, rest(aPair), pair(fn(first(aPair)), delayed));
-    
+
 const doubled = mapWith((x) => x * 2, l123);
 
 first(doubled)
@@ -302,7 +302,7 @@ const first = K,
       rest  = K(I),
       pair = V,
       EMPTY = (() => {});
-      
+
 const l123 = pair(1)(pair(2)(pair(3)(EMPTY)));
 
 l123(first)
@@ -323,7 +323,7 @@ const length = (aPair) =>
   aPair === EMPTY
     ? 0
     : 1 + length(aPair(rest));
-    
+
 length(l123)
   //=> 3
 ~~~~~~~~
@@ -341,7 +341,7 @@ const mapWith = (fn, aPair, delayed = EMPTY) =>
   aPair === EMPTY
     ? reverse(delayed)
     : mapWith(fn, aPair(rest), pair(fn(aPair(first)))(delayed));
-    
+
 const doubled = mapWith((x) => x * 2, l123)
 
 doubled(first)
@@ -380,7 +380,7 @@ Let's presume we are working with a slightly higher abstraction, we'll call it a
 ~~~~~~~~
 const length = (list) => list(
   () => 0,
-  (aPair) => 1 + length(aPair(rest)))
+  (aPair) => 1 + length(aPair(rest))
 );
 ~~~~~~~~
 
@@ -391,12 +391,12 @@ Now we'll need to write `first` and `rest` functions for a list, and those names
 const pairFirst = K,
       pairRest  = K(I),
       pair = V;
-      
+
 const first = (list) => list(
     () => "ERROR: Can't take first of an empty list",
     (aPair) => aPair(pairFirst)
   );
-      
+
 const rest = (list) => list(
     () => "ERROR: Can't take first of an empty list",
     (aPair) => aPair(pairRest)
@@ -454,13 +454,13 @@ const reverse = (list, delayed = EMPTYLIST) => list(
 
 print(reverse(l123));
   //=> 3 2 1
-  
+
 const mapWith = (fn, list, delayed = EMPTYLIST) =>
   list(
     () => reverse(delayed),
     (aPair) => mapWith(fn, aPair(pairRest), node(fn(aPair(pairFirst)))(delayed))
   );
-  
+
 print(mapWith(x => x * x, reverse(l123)))
   //=> 941
 ~~~~~~~~
@@ -500,7 +500,7 @@ const first = K,
       second = K(I),
       pair = (first) => (second) => {
         const pojo = {first, second};
-        
+
         return (selector) => selector(pojo.first)(pojo.second);
       };
 
@@ -508,7 +508,7 @@ const latin = pair("primus")("secundus");
 
 latin(first)
   //=> "primus"
-  
+
 latin(second)
   //=> "secundus"
 ~~~~~~~~
